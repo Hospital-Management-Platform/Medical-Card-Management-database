@@ -1,0 +1,977 @@
+-- MySQL Administrator dump 1.4
+--
+-- ------------------------------------------------------
+-- Server version	5.0.37-community-nt
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+
+--
+-- Create schema mcm
+--
+
+CREATE DATABASE IF NOT EXISTS mcm;
+USE mcm;
+
+--
+-- Definition of table `attribute`
+--
+
+DROP TABLE IF EXISTS `attribute`;
+CREATE TABLE `attribute` (
+  `Attribute_id` int(10) unsigned NOT NULL auto_increment,
+  `Attribute_Name` varchar(45) collate utf8_unicode_ci default NULL,
+  `Attribute_Code` varchar(45) collate utf8_unicode_ci default NULL,
+  `Attribute_Busns_Catg_Code` varchar(45) collate utf8_unicode_ci default NULL,
+  `Attribute_businessCatName` varchar(45) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`Attribute_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `attribute`
+--
+
+/*!40000 ALTER TABLE `attribute` DISABLE KEYS */;
+INSERT INTO `attribute` (`Attribute_id`,`Attribute_Name`,`Attribute_Code`,`Attribute_Busns_Catg_Code`,`Attribute_businessCatName`) VALUES 
+ (6,'General','GEN456','Hospital',NULL),
+ (7,'Oncology','OCN234','Hospital',NULL),
+ (8,'Dermatologist','DEM345','Hospital',NULL),
+ (9,'Cosmetology','COS345','Hospital',NULL),
+ (10,'Lic\'s Jeevan Pragati','LIC456','Insurance',NULL),
+ (11,'ccc','222','Hospital',NULL),
+ (12,'crn','222','Insurance',NULL);
+/*!40000 ALTER TABLE `attribute` ENABLE KEYS */;
+
+
+--
+-- Definition of table `bankdetails`
+--
+
+DROP TABLE IF EXISTS `bankdetails`;
+CREATE TABLE `bankdetails` (
+  `bank_id` int(10) unsigned NOT NULL auto_increment,
+  `accountholdername` varchar(45) collate utf8_unicode_ci default NULL,
+  `accountnumber` bigint(20) unsigned default NULL,
+  `ifsccode` varchar(45) collate utf8_unicode_ci default NULL,
+  `accounttype` varchar(45) collate utf8_unicode_ci default NULL,
+  `bankname` varchar(45) collate utf8_unicode_ci default NULL,
+  `bankbranch` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`bank_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `bankdetails`
+--
+
+/*!40000 ALTER TABLE `bankdetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bankdetails` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_job_execution`
+--
+
+DROP TABLE IF EXISTS `batch_job_execution`;
+CREATE TABLE `batch_job_execution` (
+  `JOB_EXECUTION_ID` bigint(20) NOT NULL,
+  `VERSION` bigint(20) default NULL,
+  `JOB_INSTANCE_ID` bigint(20) NOT NULL,
+  `CREATE_TIME` datetime NOT NULL,
+  `START_TIME` datetime default NULL,
+  `END_TIME` datetime default NULL,
+  `STATUS` varchar(10) default NULL,
+  `EXIT_CODE` varchar(2500) default NULL,
+  `EXIT_MESSAGE` varchar(2500) default NULL,
+  `LAST_UPDATED` datetime default NULL,
+  `JOB_CONFIGURATION_LOCATION` varchar(2500) default NULL,
+  PRIMARY KEY  (`JOB_EXECUTION_ID`),
+  KEY `JOB_INST_EXEC_FK` (`JOB_INSTANCE_ID`),
+  CONSTRAINT `JOB_INST_EXEC_FK` FOREIGN KEY (`JOB_INSTANCE_ID`) REFERENCES `batch_job_instance` (`JOB_INSTANCE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_job_execution`
+--
+
+/*!40000 ALTER TABLE `batch_job_execution` DISABLE KEYS */;
+INSERT INTO `batch_job_execution` (`JOB_EXECUTION_ID`,`VERSION`,`JOB_INSTANCE_ID`,`CREATE_TIME`,`START_TIME`,`END_TIME`,`STATUS`,`EXIT_CODE`,`EXIT_MESSAGE`,`LAST_UPDATED`,`JOB_CONFIGURATION_LOCATION`) VALUES 
+ (1,2,1,'2018-09-19 15:59:25','2018-09-19 15:59:25','2018-09-19 15:59:26','COMPLETED','COMPLETED','','2018-09-19 15:59:26',NULL);
+/*!40000 ALTER TABLE `batch_job_execution` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_job_execution_context`
+--
+
+DROP TABLE IF EXISTS `batch_job_execution_context`;
+CREATE TABLE `batch_job_execution_context` (
+  `JOB_EXECUTION_ID` bigint(20) NOT NULL,
+  `SHORT_CONTEXT` varchar(2500) NOT NULL,
+  `SERIALIZED_CONTEXT` text,
+  PRIMARY KEY  (`JOB_EXECUTION_ID`),
+  CONSTRAINT `JOB_EXEC_CTX_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `batch_job_execution` (`JOB_EXECUTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_job_execution_context`
+--
+
+/*!40000 ALTER TABLE `batch_job_execution_context` DISABLE KEYS */;
+INSERT INTO `batch_job_execution_context` (`JOB_EXECUTION_ID`,`SHORT_CONTEXT`,`SERIALIZED_CONTEXT`) VALUES 
+ (1,'{}',NULL);
+/*!40000 ALTER TABLE `batch_job_execution_context` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_job_execution_params`
+--
+
+DROP TABLE IF EXISTS `batch_job_execution_params`;
+CREATE TABLE `batch_job_execution_params` (
+  `JOB_EXECUTION_ID` bigint(20) NOT NULL,
+  `TYPE_CD` varchar(6) NOT NULL,
+  `KEY_NAME` varchar(100) NOT NULL,
+  `STRING_VAL` varchar(250) default NULL,
+  `DATE_VAL` datetime default NULL,
+  `LONG_VAL` bigint(20) default NULL,
+  `DOUBLE_VAL` double default NULL,
+  `IDENTIFYING` char(1) NOT NULL,
+  KEY `JOB_EXEC_PARAMS_FK` (`JOB_EXECUTION_ID`),
+  CONSTRAINT `JOB_EXEC_PARAMS_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `batch_job_execution` (`JOB_EXECUTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_job_execution_params`
+--
+
+/*!40000 ALTER TABLE `batch_job_execution_params` DISABLE KEYS */;
+/*!40000 ALTER TABLE `batch_job_execution_params` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_job_execution_seq`
+--
+
+DROP TABLE IF EXISTS `batch_job_execution_seq`;
+CREATE TABLE `batch_job_execution_seq` (
+  `ID` bigint(20) NOT NULL,
+  `UNIQUE_KEY` char(1) NOT NULL,
+  UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_job_execution_seq`
+--
+
+/*!40000 ALTER TABLE `batch_job_execution_seq` DISABLE KEYS */;
+INSERT INTO `batch_job_execution_seq` (`ID`,`UNIQUE_KEY`) VALUES 
+ (1,'0');
+/*!40000 ALTER TABLE `batch_job_execution_seq` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_job_instance`
+--
+
+DROP TABLE IF EXISTS `batch_job_instance`;
+CREATE TABLE `batch_job_instance` (
+  `JOB_INSTANCE_ID` bigint(20) NOT NULL,
+  `VERSION` bigint(20) default NULL,
+  `JOB_NAME` varchar(100) NOT NULL,
+  `JOB_KEY` varchar(32) NOT NULL,
+  PRIMARY KEY  (`JOB_INSTANCE_ID`),
+  UNIQUE KEY `JOB_INST_UN` (`JOB_NAME`,`JOB_KEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_job_instance`
+--
+
+/*!40000 ALTER TABLE `batch_job_instance` DISABLE KEYS */;
+INSERT INTO `batch_job_instance` (`JOB_INSTANCE_ID`,`VERSION`,`JOB_NAME`,`JOB_KEY`) VALUES 
+ (1,0,'reportJob','d41d8cd98f00b204e9800998ecf8427e');
+/*!40000 ALTER TABLE `batch_job_instance` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_job_seq`
+--
+
+DROP TABLE IF EXISTS `batch_job_seq`;
+CREATE TABLE `batch_job_seq` (
+  `ID` bigint(20) NOT NULL,
+  `UNIQUE_KEY` char(1) NOT NULL,
+  UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_job_seq`
+--
+
+/*!40000 ALTER TABLE `batch_job_seq` DISABLE KEYS */;
+INSERT INTO `batch_job_seq` (`ID`,`UNIQUE_KEY`) VALUES 
+ (1,'0');
+/*!40000 ALTER TABLE `batch_job_seq` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_step_execution`
+--
+
+DROP TABLE IF EXISTS `batch_step_execution`;
+CREATE TABLE `batch_step_execution` (
+  `STEP_EXECUTION_ID` bigint(20) NOT NULL,
+  `VERSION` bigint(20) NOT NULL,
+  `STEP_NAME` varchar(100) NOT NULL,
+  `JOB_EXECUTION_ID` bigint(20) NOT NULL,
+  `START_TIME` datetime NOT NULL,
+  `END_TIME` datetime default NULL,
+  `STATUS` varchar(10) default NULL,
+  `COMMIT_COUNT` bigint(20) default NULL,
+  `READ_COUNT` bigint(20) default NULL,
+  `FILTER_COUNT` bigint(20) default NULL,
+  `WRITE_COUNT` bigint(20) default NULL,
+  `READ_SKIP_COUNT` bigint(20) default NULL,
+  `WRITE_SKIP_COUNT` bigint(20) default NULL,
+  `PROCESS_SKIP_COUNT` bigint(20) default NULL,
+  `ROLLBACK_COUNT` bigint(20) default NULL,
+  `EXIT_CODE` varchar(2500) default NULL,
+  `EXIT_MESSAGE` varchar(2500) default NULL,
+  `LAST_UPDATED` datetime default NULL,
+  PRIMARY KEY  (`STEP_EXECUTION_ID`),
+  KEY `JOB_EXEC_STEP_FK` (`JOB_EXECUTION_ID`),
+  CONSTRAINT `JOB_EXEC_STEP_FK` FOREIGN KEY (`JOB_EXECUTION_ID`) REFERENCES `batch_job_execution` (`JOB_EXECUTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_step_execution`
+--
+
+/*!40000 ALTER TABLE `batch_step_execution` DISABLE KEYS */;
+INSERT INTO `batch_step_execution` (`STEP_EXECUTION_ID`,`VERSION`,`STEP_NAME`,`JOB_EXECUTION_ID`,`START_TIME`,`END_TIME`,`STATUS`,`COMMIT_COUNT`,`READ_COUNT`,`FILTER_COUNT`,`WRITE_COUNT`,`READ_SKIP_COUNT`,`WRITE_SKIP_COUNT`,`PROCESS_SKIP_COUNT`,`ROLLBACK_COUNT`,`EXIT_CODE`,`EXIT_MESSAGE`,`LAST_UPDATED`) VALUES 
+ (1,6,'step1',1,'2018-09-19 15:59:25','2018-09-19 15:59:26','COMPLETED',4,6,0,6,0,0,0,0,'COMPLETED','','2018-09-19 15:59:26');
+/*!40000 ALTER TABLE `batch_step_execution` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_step_execution_context`
+--
+
+DROP TABLE IF EXISTS `batch_step_execution_context`;
+CREATE TABLE `batch_step_execution_context` (
+  `STEP_EXECUTION_ID` bigint(20) NOT NULL,
+  `SHORT_CONTEXT` varchar(2500) NOT NULL,
+  `SERIALIZED_CONTEXT` text,
+  PRIMARY KEY  (`STEP_EXECUTION_ID`),
+  CONSTRAINT `STEP_EXEC_CTX_FK` FOREIGN KEY (`STEP_EXECUTION_ID`) REFERENCES `batch_step_execution` (`STEP_EXECUTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_step_execution_context`
+--
+
+/*!40000 ALTER TABLE `batch_step_execution_context` DISABLE KEYS */;
+INSERT INTO `batch_step_execution_context` (`STEP_EXECUTION_ID`,`SHORT_CONTEXT`,`SERIALIZED_CONTEXT`) VALUES 
+ (1,'{\"batch.taskletType\":\"org.springframework.batch.core.step.item.ChunkOrientedTasklet\",\"FlatFileItemReader.read.count\":7,\"batch.stepType\":\"org.springframework.batch.core.step.tasklet.TaskletStep\"}',NULL);
+/*!40000 ALTER TABLE `batch_step_execution_context` ENABLE KEYS */;
+
+
+--
+-- Definition of table `batch_step_execution_seq`
+--
+
+DROP TABLE IF EXISTS `batch_step_execution_seq`;
+CREATE TABLE `batch_step_execution_seq` (
+  `ID` bigint(20) NOT NULL,
+  `UNIQUE_KEY` char(1) NOT NULL,
+  UNIQUE KEY `UNIQUE_KEY_UN` (`UNIQUE_KEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `batch_step_execution_seq`
+--
+
+/*!40000 ALTER TABLE `batch_step_execution_seq` DISABLE KEYS */;
+INSERT INTO `batch_step_execution_seq` (`ID`,`UNIQUE_KEY`) VALUES 
+ (1,'0');
+/*!40000 ALTER TABLE `batch_step_execution_seq` ENABLE KEYS */;
+
+
+--
+-- Definition of table `businesscategory`
+--
+
+DROP TABLE IF EXISTS `businesscategory`;
+CREATE TABLE `businesscategory` (
+  `bsn_categoryId` int(10) unsigned NOT NULL auto_increment,
+  `bsn_categoryName` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_categoryCode` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  USING BTREE (`bsn_categoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `businesscategory`
+--
+
+/*!40000 ALTER TABLE `businesscategory` DISABLE KEYS */;
+INSERT INTO `businesscategory` (`bsn_categoryId`,`bsn_categoryName`,`bsn_categoryCode`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`) VALUES 
+ (23,'Hospital','HOSP25879','admin','2018-08-30 15:07:06','admin','2018-08-30 15:07:06'),
+ (24,'Insurance','INS36545','admin','2018-09-12 12:04:41','admin','2018-09-12 12:04:41');
+/*!40000 ALTER TABLE `businesscategory` ENABLE KEYS */;
+
+
+--
+-- Definition of table `businessentity`
+--
+
+DROP TABLE IF EXISTS `businessentity`;
+CREATE TABLE `businessentity` (
+  `bsn_id` bigint(20) unsigned NOT NULL auto_increment,
+  `bsn_name` varchar(45) character set latin1 default NULL,
+  `bsn_code` varchar(45) character set latin1 default NULL,
+  `bsn_categorycode` varchar(45) character set latin1 default NULL,
+  `bsn_shortname` varchar(45) character set latin1 default NULL,
+  `bsn_contactperson` varchar(45) character set latin1 default NULL,
+  `bsn_designation` varchar(45) character set latin1 default NULL,
+  `bsn_address1` varchar(45) character set latin1 default NULL,
+  `bsn_address2` varchar(45) character set latin1 default NULL,
+  `bsn_country` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_state` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_city` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_pincode` int(10) unsigned default NULL,
+  `bsn_mobile` int(10) unsigned default NULL,
+  `bsn_phone` int(10) unsigned default NULL,
+  `bsn_fax` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_accountholdername` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_accountnumber` int(10) unsigned default NULL,
+  `bsn_ifsccode` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_accounttype` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_bankname` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_bankbranch` varchar(45) collate utf8_unicode_ci default NULL,
+  `bsn_offers` varchar(45) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  USING BTREE (`bsn_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `businessentity`
+--
+
+/*!40000 ALTER TABLE `businessentity` DISABLE KEYS */;
+INSERT INTO `businessentity` (`bsn_id`,`bsn_name`,`bsn_code`,`bsn_categorycode`,`bsn_shortname`,`bsn_contactperson`,`bsn_designation`,`bsn_address1`,`bsn_address2`,`bsn_country`,`bsn_state`,`bsn_city`,`bsn_pincode`,`bsn_mobile`,`bsn_phone`,`bsn_fax`,`bsn_accountholdername`,`bsn_accountnumber`,`bsn_ifsccode`,`bsn_accounttype`,`bsn_bankname`,`bsn_bankbranch`,`bsn_offers`) VALUES 
+ (47,'Columbia Asia Referral Hospital ','blrcah','Hospital','CAH','DR jagan','admin',' 26/4, Brigade Gateway','Beside Metro Cash and Carry West','USA','AL','SMCS',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+ (52,'HGC','hgc-1256','h-356','hgc',NULL,NULL,NULL,NULL,'IN','AP','ATP',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `businessentity` ENABLE KEYS */;
+
+
+--
+-- Definition of table `contactdetails`
+--
+
+DROP TABLE IF EXISTS `contactdetails`;
+CREATE TABLE `contactdetails` (
+  `contact_id` int(10) unsigned NOT NULL auto_increment,
+  `contactPerson` varchar(45) collate utf8_unicode_ci default NULL,
+  `designation` varchar(45) collate utf8_unicode_ci default NULL,
+  `address1` varchar(250) collate utf8_unicode_ci default NULL,
+  `address2` varchar(250) collate utf8_unicode_ci default NULL,
+  `country` varchar(45) collate utf8_unicode_ci default NULL,
+  `state` varchar(45) collate utf8_unicode_ci default NULL,
+  `city` varchar(45) collate utf8_unicode_ci default NULL,
+  `pincode` int(10) unsigned default NULL,
+  `email` varchar(45) collate utf8_unicode_ci default NULL,
+  `mobile` bigint(20) unsigned default NULL,
+  `phone` bigint(20) unsigned default NULL,
+  `fax` bigint(20) unsigned default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`contact_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `contactdetails`
+--
+
+/*!40000 ALTER TABLE `contactdetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contactdetails` ENABLE KEYS */;
+
+
+--
+-- Definition of table `coursecategory`
+--
+
+DROP TABLE IF EXISTS `coursecategory`;
+CREATE TABLE `coursecategory` (
+  `categoryId` int(10) unsigned NOT NULL auto_increment,
+  `categoryCode` varchar(45) collate utf8_unicode_ci default NULL,
+  `Status` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  `categoryName` varchar(45) collate utf8_unicode_ci default NULL,
+  `institution_id` bigint(20) unsigned default NULL,
+  PRIMARY KEY  USING BTREE (`categoryId`),
+  KEY `FK_institution_id_1` (`institution_id`),
+  CONSTRAINT `FK_institution_id_1` FOREIGN KEY (`institution_id`) REFERENCES `institutionprofile` (`institution_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `coursecategory`
+--
+
+/*!40000 ALTER TABLE `coursecategory` DISABLE KEYS */;
+INSERT INTO `coursecategory` (`categoryId`,`categoryCode`,`Status`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`,`categoryName`,`institution_id`) VALUES 
+ (41,'PG','true',NULL,'2018-09-14 14:11:02',NULL,'2018-09-14 14:11:02','Post Graduation',51),
+ (42,'UG','true',NULL,'2018-09-14 14:19:04',NULL,'2018-09-14 14:19:04','Under Graduation',52),
+ (45,'sdfsdfsdf',NULL,NULL,'2018-09-19 16:25:44',NULL,'2018-09-19 16:25:44','sdfsdf',NULL),
+ (46,'BE',NULL,NULL,'2018-09-19 18:10:43',NULL,'2018-09-19 18:10:43','UnderGraduation',NULL),
+ (47,'BE',NULL,NULL,'2018-09-19 18:13:13',NULL,'2018-09-19 18:13:13','UnderGraduation',NULL);
+/*!40000 ALTER TABLE `coursecategory` ENABLE KEYS */;
+
+
+--
+-- Definition of table `courseoffered`
+--
+
+DROP TABLE IF EXISTS `courseoffered`;
+CREATE TABLE `courseoffered` (
+  `courseOffered_id` bigint(100) unsigned NOT NULL auto_increment,
+  `courseCode` varchar(100) collate utf8_unicode_ci default NULL,
+  `status` varchar(100) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`courseOffered_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `courseoffered`
+--
+
+/*!40000 ALTER TABLE `courseoffered` DISABLE KEYS */;
+INSERT INTO `courseoffered` (`courseOffered_id`,`courseCode`,`status`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`) VALUES 
+ (1,'aaa','abc','chethu','2018-08-30 15:15:59','ch','2018-08-30 15:15:59');
+/*!40000 ALTER TABLE `courseoffered` ENABLE KEYS */;
+
+
+--
+-- Definition of table `courseprofile`
+--
+
+DROP TABLE IF EXISTS `courseprofile`;
+CREATE TABLE `courseprofile` (
+  `course_Id` bigint(100) unsigned NOT NULL auto_increment,
+  `courseName` varchar(200) collate utf8_unicode_ci default NULL,
+  `courseCode` varchar(200) collate utf8_unicode_ci default NULL,
+  `duration` varchar(100) collate utf8_unicode_ci default NULL,
+  `categoryName` varchar(200) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  `categoryId` int(10) unsigned default NULL,
+  `institution_id` bigint(20) unsigned default NULL,
+  PRIMARY KEY  (`course_Id`),
+  KEY `FK_categoryId_1` (`categoryId`),
+  KEY `FK_courseprofile_2` (`institution_id`),
+  CONSTRAINT `FK_courseprofile_2` FOREIGN KEY (`institution_id`) REFERENCES `institutionprofile` (`institution_id`),
+  CONSTRAINT `FK_categoryId_1` FOREIGN KEY (`categoryId`) REFERENCES `coursecategory` (`categoryId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `courseprofile`
+--
+
+/*!40000 ALTER TABLE `courseprofile` DISABLE KEYS */;
+INSERT INTO `courseprofile` (`course_Id`,`courseName`,`courseCode`,`duration`,`categoryName`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`,`categoryId`,`institution_id`) VALUES 
+ (38,'Master of Engineering','ME','2','Post Graduation',NULL,'2018-09-14 14:11:46',NULL,'2018-09-14 14:11:46',41,NULL),
+ (39,'Bachelor of engineering','BE','3','Under Graduation',NULL,'2018-09-14 14:19:41',NULL,'2018-09-14 14:19:41',42,NULL),
+ (40,'UnderGraduation',NULL,NULL,NULL,NULL,'2018-09-19 18:10:43',NULL,'2018-09-19 18:10:43',NULL,NULL),
+ (41,'UnderGraduation',NULL,NULL,NULL,NULL,'2018-09-19 18:13:13',NULL,'2018-09-19 18:13:13',NULL,NULL);
+/*!40000 ALTER TABLE `courseprofile` ENABLE KEYS */;
+
+
+--
+-- Definition of table `doctors`
+--
+
+DROP TABLE IF EXISTS `doctors`;
+CREATE TABLE `doctors` (
+  `doc_id` int(10) unsigned NOT NULL auto_increment,
+  `doc_name` varchar(45) collate utf8_unicode_ci default NULL,
+  `doc_designation` varchar(45) collate utf8_unicode_ci default NULL,
+  `doc_age` int(10) unsigned default NULL,
+  `doc_address` varchar(45) collate utf8_unicode_ci default NULL,
+  `doc_specialization` varchar(45) collate utf8_unicode_ci default NULL,
+  `doc_experience` int(10) unsigned default NULL,
+  `doc_phone` varchar(45) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`doc_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `doctors`
+--
+
+/*!40000 ALTER TABLE `doctors` DISABLE KEYS */;
+INSERT INTO `doctors` (`doc_id`,`doc_name`,`doc_designation`,`doc_age`,`doc_address`,`doc_specialization`,`doc_experience`,`doc_phone`) VALUES 
+ (1,'baaaa','md',34,'gxdhsg','hbdchs',5,'afhgd');
+/*!40000 ALTER TABLE `doctors` ENABLE KEYS */;
+
+
+--
+-- Definition of table `edu_bankdetails`
+--
+
+DROP TABLE IF EXISTS `edu_bankdetails`;
+CREATE TABLE `edu_bankdetails` (
+  `bank_id` int(10) unsigned NOT NULL auto_increment,
+  ` accountholdername` varchar(45) collate utf8_unicode_ci default NULL,
+  `accountnumber` bigint(20) unsigned default NULL,
+  `ifsccode` varchar(45) collate utf8_unicode_ci default NULL,
+  `accounttype` bigint(20) unsigned default NULL,
+  `bankname` varchar(45) collate utf8_unicode_ci default NULL,
+  ` bankbranch` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`bank_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `edu_bankdetails`
+--
+
+/*!40000 ALTER TABLE `edu_bankdetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `edu_bankdetails` ENABLE KEYS */;
+
+
+--
+-- Definition of table `edu_primary details`
+--
+
+DROP TABLE IF EXISTS `edu_primary details`;
+CREATE TABLE `edu_primary details` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) collate utf8_unicode_ci default NULL,
+  `registrationCode` int(10) unsigned default NULL,
+  `branch` varchar(45) collate utf8_unicode_ci default NULL,
+  `shortname` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `edu_primary details`
+--
+
+/*!40000 ALTER TABLE `edu_primary details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `edu_primary details` ENABLE KEYS */;
+
+
+--
+-- Definition of table `hospital`
+--
+
+DROP TABLE IF EXISTS `hospital`;
+CREATE TABLE `hospital` (
+  `hospital_id` int(10) unsigned NOT NULL auto_increment,
+  `hospital_name` varchar(45) character set latin1 default NULL,
+  `hospital_address1` varchar(45) character set latin1 default NULL,
+  `hospital_phone` varchar(45) character set latin1 default NULL,
+  `doctor` varchar(45) character set latin1 default NULL,
+  `doctor_specialist` varchar(45) character set latin1 default NULL,
+  `hospital_address2` varchar(45) collate utf8_unicode_ci default NULL,
+  `hosp_country` varchar(45) collate utf8_unicode_ci default NULL,
+  `hosp_state` varchar(45) collate utf8_unicode_ci default NULL,
+  `hosp_city` varchar(45) collate utf8_unicode_ci default NULL,
+  `hosp_zipcode` varchar(45) collate utf8_unicode_ci default NULL,
+  `hosp_specilities` varchar(45) collate utf8_unicode_ci default NULL,
+  `treatment_available` varchar(45) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  USING BTREE (`hospital_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `hospital`
+--
+
+/*!40000 ALTER TABLE `hospital` DISABLE KEYS */;
+INSERT INTO `hospital` (`hospital_id`,`hospital_name`,`hospital_address1`,`hospital_phone`,`doctor`,`doctor_specialist`,`hospital_address2`,`hosp_country`,`hosp_state`,`hosp_city`,`hosp_zipcode`,`hosp_specilities`,`treatment_available`) VALUES 
+ (1,'0','praveen',NULL,'0',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+ (2,'0',NULL,'ffgdfgf','0',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+ (3,'praveen',NULL,'ffgdfgf',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+ (4,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio','yes'),
+ (5,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio,sgdhfgds,vdfvg','yes'),
+ (6,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio','yes'),
+ (7,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio','yes'),
+ (8,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio','yes'),
+ (9,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio','yes'),
+ (10,'itwine','snagar','two','huli','yyyy','andre','ind','kar','ban','one','physio','yes'),
+ (11,'praveen','prav','99999999','prav',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `hospital` ENABLE KEYS */;
+
+
+--
+-- Definition of table `institutionprofile`
+--
+
+DROP TABLE IF EXISTS `institutionprofile`;
+CREATE TABLE `institutionprofile` (
+  `institution_id` bigint(20) unsigned NOT NULL auto_increment,
+  `contactPerson` varchar(45) collate utf8_unicode_ci default NULL,
+  `designation` varchar(45) collate utf8_unicode_ci default NULL,
+  `address1` varchar(100) collate utf8_unicode_ci default NULL,
+  `address2` varchar(100) collate utf8_unicode_ci default NULL,
+  `country` varchar(45) collate utf8_unicode_ci default NULL,
+  `state` varchar(45) collate utf8_unicode_ci default NULL,
+  `city` varchar(45) collate utf8_unicode_ci default NULL,
+  `pincode` varchar(45) collate utf8_unicode_ci default NULL,
+  `email` varchar(45) collate utf8_unicode_ci default NULL,
+  `mobile` varchar(45) collate utf8_unicode_ci default NULL,
+  `phone` bigint(20) unsigned default NULL,
+  `fax` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  `accountHolderName` varchar(45) collate utf8_unicode_ci default NULL,
+  `accountNumber` int(10) unsigned default NULL,
+  `ifsccode` varchar(45) collate utf8_unicode_ci default NULL,
+  `accountType` varchar(45) collate utf8_unicode_ci default NULL,
+  `bankName` varchar(45) collate utf8_unicode_ci default NULL,
+  `bankBranch` varchar(45) collate utf8_unicode_ci default NULL,
+  `name` varchar(45) collate utf8_unicode_ci default NULL,
+  `registrationCode` varchar(45) collate utf8_unicode_ci default NULL,
+  `branch` varchar(45) collate utf8_unicode_ci default NULL,
+  `shortname` varchar(45) collate utf8_unicode_ci default NULL,
+  `courseOffered` varchar(45) collate utf8_unicode_ci default NULL,
+  `courseCode` varchar(45) collate utf8_unicode_ci default NULL,
+  `status` tinyint(1) default NULL,
+  PRIMARY KEY  USING BTREE (`institution_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `institutionprofile`
+--
+
+/*!40000 ALTER TABLE `institutionprofile` DISABLE KEYS */;
+INSERT INTO `institutionprofile` (`institution_id`,`contactPerson`,`designation`,`address1`,`address2`,`country`,`state`,`city`,`pincode`,`email`,`mobile`,`phone`,`fax`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`,`accountHolderName`,`accountNumber`,`ifsccode`,`accountType`,`bankName`,`bankBranch`,`name`,`registrationCode`,`branch`,`shortname`,`courseOffered`,`courseCode`,`status`) VALUES 
+ (51,'dr venkat','principal','mys road','dubasipally','IN','KA','BN','586425',NULL,'9876543215',0,NULL,NULL,'2018-09-14 14:34:08',NULL,'2018-09-14 14:34:08','principalrvce',98765,'corp00016','saving','Corp','shantinagr','Rastriya Vidyalaya','blrrvce','mys road','RVCE',NULL,NULL,NULL),
+ (52,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2018-09-17 15:07:39',NULL,'2018-09-18 17:06:03',NULL,NULL,NULL,NULL,NULL,NULL,'We','Wre','Wer','We',NULL,NULL,NULL),
+ (56,NULL,'professor',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2018-09-19 18:10:43',NULL,'2018-09-19 18:10:43',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+ (57,NULL,'professor',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'2018-09-19 18:13:13',NULL,'2018-09-19 18:13:13',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `institutionprofile` ENABLE KEYS */;
+
+
+--
+-- Definition of table `insurance`
+--
+
+DROP TABLE IF EXISTS `insurance`;
+CREATE TABLE `insurance` (
+  `insuId` int(10) unsigned NOT NULL auto_increment,
+  `insuCompanyName` varchar(45) default NULL,
+  `hospitalId` int(10) unsigned default NULL,
+  `institutuionId` int(10) unsigned default NULL,
+  `claimId` int(10) unsigned default NULL,
+  `claimStatusCode` varchar(45) default NULL,
+  `updateDate` varchar(45) default NULL,
+  `amountClaimed` double default NULL,
+  `amountPaid` double default NULL,
+  `processDate` varchar(45) default NULL,
+  `endDate` varchar(45) default NULL,
+  PRIMARY KEY  (`insuId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `insurance`
+--
+
+/*!40000 ALTER TABLE `insurance` DISABLE KEYS */;
+/*!40000 ALTER TABLE `insurance` ENABLE KEYS */;
+
+
+--
+-- Definition of table `membership`
+--
+
+DROP TABLE IF EXISTS `membership`;
+CREATE TABLE `membership` (
+  `membership_id` bigint(200) NOT NULL auto_increment,
+  `memberName` varchar(200) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`membership_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `membership`
+--
+
+/*!40000 ALTER TABLE `membership` DISABLE KEYS */;
+INSERT INTO `membership` (`membership_id`,`memberName`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`) VALUES 
+ (1,'Annual',NULL,'2018-09-05 16:17:00',NULL,'2018-09-05 16:17:00'),
+ (2,'Monthly',NULL,'2018-09-05 16:17:07',NULL,'2018-09-05 16:17:07');
+/*!40000 ALTER TABLE `membership` ENABLE KEYS */;
+
+
+--
+-- Definition of table `offers`
+--
+
+DROP TABLE IF EXISTS `offers`;
+CREATE TABLE `offers` (
+  `offers_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) collate utf8_unicode_ci default NULL,
+  `code` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`offers_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `offers`
+--
+
+/*!40000 ALTER TABLE `offers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `offers` ENABLE KEYS */;
+
+
+--
+-- Definition of table `plan`
+--
+
+DROP TABLE IF EXISTS `plan`;
+CREATE TABLE `plan` (
+  `planname_id` bigint(100) NOT NULL auto_increment,
+  `planname` varchar(200) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(200) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`planname_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `plan`
+--
+
+/*!40000 ALTER TABLE `plan` DISABLE KEYS */;
+INSERT INTO `plan` (`planname_id`,`planname`,`createdBy`,`createDateTime`,`modifiedBy`,`modifiedDateTime`) VALUES 
+ (1,'Silver',NULL,'2018-09-12 12:05:22',NULL,'2018-09-12 12:05:22'),
+ (2,'Gold',NULL,'2018-09-12 12:05:27',NULL,'2018-09-12 12:05:27'),
+ (3,'Platinum',NULL,'2018-09-12 12:05:32',NULL,'2018-09-12 12:05:32');
+/*!40000 ALTER TABLE `plan` ENABLE KEYS */;
+
+
+--
+-- Definition of table `plans`
+--
+
+DROP TABLE IF EXISTS `plans`;
+CREATE TABLE `plans` (
+  `plan_id` int(10) unsigned NOT NULL auto_increment,
+  `planName` varchar(45) collate utf8_unicode_ci default NULL,
+  `planPrice` int(10) unsigned default NULL,
+  `planmembership` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `endDateTime` datetime default NULL,
+  `modifiedDateTime` datetime default NULL,
+  `startDateTime` datetime default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `plans`
+--
+
+/*!40000 ALTER TABLE `plans` DISABLE KEYS */;
+INSERT INTO `plans` (`plan_id`,`planName`,`planPrice`,`planmembership`,`createDateTime`,`endDateTime`,`modifiedDateTime`,`startDateTime`,`createdBy`,`modifiedBy`) VALUES 
+ (17,'Silver',100,'Monthly','2018-09-15 17:03:24','2099-02-01 00:00:01','2018-09-15 17:03:24','2018-09-15 00:00:00',NULL,NULL),
+ (18,'Silver',200,'Annual','2018-09-15 17:03:40','2018-09-17 00:00:00','2018-09-15 17:03:40','2018-09-18 00:00:00',NULL,NULL),
+ (19,'Gold',90000,'Annual','2018-09-18 10:22:58','2099-02-01 00:00:01','2018-09-18 10:22:58','2018-09-18 10:22:58',NULL,NULL),
+ (20,'Gold',8000,'Monthly','2018-09-18 10:23:23','2099-02-01 00:00:01','2018-09-18 10:23:23','2018-09-18 10:23:23',NULL,NULL),
+ (21,'Platinum',500,'Monthly','2018-09-18 10:24:14','2099-02-01 00:00:01','2018-09-18 10:24:14','2018-09-18 00:00:00',NULL,NULL),
+ (22,'Platinum',600,'Annual','2018-09-18 10:24:30','2018-09-17 10:24:30','2018-09-18 10:24:30','2018-09-18 10:24:30',NULL,NULL);
+/*!40000 ALTER TABLE `plans` ENABLE KEYS */;
+
+
+--
+-- Definition of table `primarydetails`
+--
+
+DROP TABLE IF EXISTS `primarydetails`;
+CREATE TABLE `primarydetails` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) collate utf8_unicode_ci default NULL,
+  `registrationCode` bigint(20) unsigned default NULL,
+  `businessCategoryCode` int(10) unsigned default NULL,
+  `shortname` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(100) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `primarydetails`
+--
+
+/*!40000 ALTER TABLE `primarydetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `primarydetails` ENABLE KEYS */;
+
+
+--
+-- Definition of table `specialization`
+--
+
+DROP TABLE IF EXISTS `specialization`;
+CREATE TABLE `specialization` (
+  `spec_id` int(10) unsigned NOT NULL auto_increment,
+  `spec_name` varchar(45) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`spec_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `specialization`
+--
+
+/*!40000 ALTER TABLE `specialization` DISABLE KEYS */;
+INSERT INTO `specialization` (`spec_id`,`spec_name`) VALUES 
+ (1,'baaaa');
+/*!40000 ALTER TABLE `specialization` ENABLE KEYS */;
+
+
+--
+-- Definition of table `studentprofile`
+--
+
+DROP TABLE IF EXISTS `studentprofile`;
+CREATE TABLE `studentprofile` (
+  `std_id` bigint(20) unsigned NOT NULL auto_increment,
+  `stdName` varchar(100) default NULL,
+  `gender` varchar(100) default NULL,
+  `addressOne` varchar(200) default NULL,
+  `addressTwo` varchar(200) default NULL,
+  `city` varchar(100) default NULL,
+  `state` varchar(100) default NULL,
+  `zipcode` varchar(100) default NULL,
+  `countryName` varchar(100) default NULL,
+  `stdPhone` varchar(100) default NULL,
+  `stdPassword` varchar(100) default NULL,
+  `stdEmail` varchar(100) default NULL,
+  `stdAdmissionNumber` varchar(100) default NULL,
+  `institutionName` varchar(200) default NULL,
+  `course` varchar(100) default NULL,
+  `parentPhone` varchar(100) default NULL,
+  `mcmId` varchar(200) default NULL,
+  `courseCategory` varchar(45) default NULL,
+  `plan` varchar(45) default NULL,
+  `status` varchar(45) default NULL,
+  `yearofjoining` varchar(45) default NULL,
+  PRIMARY KEY  USING BTREE (`std_id`),
+  KEY `std_id` (`std_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `studentprofile`
+--
+
+/*!40000 ALTER TABLE `studentprofile` DISABLE KEYS */;
+INSERT INTO `studentprofile` (`std_id`,`stdName`,`gender`,`addressOne`,`addressTwo`,`city`,`state`,`zipcode`,`countryName`,`stdPhone`,`stdPassword`,`stdEmail`,`stdAdmissionNumber`,`institutionName`,`course`,`parentPhone`,`mcmId`,`courseCategory`,`plan`,`status`,`yearofjoining`) VALUES 
+ (176,'stdName','gender','addressOne','addressTwo','city','state','course','zipcode',NULL,NULL,'countryName','parentPhone','stdEmail','stdAdmissionNumber','institutionName',NULL,'courseCategory','plan','status',NULL),
+ (177,'Mohan','Male','Vijaynagar','Jpnagar','Banglore','Karnataka','BE','560078',NULL,NULL,'India','9876543210','mohan@gmail.com','101','',NULL,'PostGraduate','','Active',NULL),
+ (178,'suneel','Male','Vijaynagar','Jpnagar','Banglore','Karnataka','BE','560079',NULL,NULL,'India','8898989876','mohan@gmail.com','102','',NULL,'PostGraduate','','Active',NULL),
+ (179,'ABHI','Male','Vijaynagar','Jpnagar','Banglore','Karnataka','BE','560080',NULL,NULL,'India','8898989877','mohan@gmail.com','103','',NULL,'PostGraduate','','Active',NULL),
+ (180,'LATHESH','Male','Vijaynagar','Jpnagar','Banglore','Karnataka','BE','560081',NULL,NULL,'India','8898989878','mohan@gmail.com','104','',NULL,'PostGraduate','','Active',NULL),
+ (181,'PREM','Male','Vijaynagar','Jpnagar','Banglore','Karnataka','BE','560082',NULL,NULL,'India','8898989879','mohan@gmail.com','105','',NULL,'PostGraduate','','Active',NULL),
+ (182,'sddsd','0','dssd','dsds','MY','KA','43324434','IN','432432432432432',NULL,'dsfd@gmail.com','54354578','Rastriya Vidyalaya','Master of Engineering',NULL,NULL,'PG','17','Created','2015 - 2016');
+/*!40000 ALTER TABLE `studentprofile` ENABLE KEYS */;
+
+
+--
+-- Definition of table `studentstatus`
+--
+
+DROP TABLE IF EXISTS `studentstatus`;
+CREATE TABLE `studentstatus` (
+  `studentStatus_id` bigint(100) NOT NULL auto_increment,
+  `status` varchar(200) collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`studentStatus_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `studentstatus`
+--
+
+/*!40000 ALTER TABLE `studentstatus` DISABLE KEYS */;
+INSERT INTO `studentstatus` (`studentStatus_id`,`status`) VALUES 
+ (1,'Created'),
+ (2,'Waiting for Approval'),
+ (3,'Approved'),
+ (4,'Payment Received'),
+ (5,'Active');
+/*!40000 ALTER TABLE `studentstatus` ENABLE KEYS */;
+
+
+--
+-- Definition of table `upload`
+--
+
+DROP TABLE IF EXISTS `upload`;
+CREATE TABLE `upload` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `studentsdata` varchar(45) collate utf8_unicode_ci default NULL,
+  `createdBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `createDateTime` datetime default NULL,
+  `modifiedBy` varchar(45) collate utf8_unicode_ci default NULL,
+  `modifiedDateTime` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `upload`
+--
+
+/*!40000 ALTER TABLE `upload` DISABLE KEYS */;
+/*!40000 ALTER TABLE `upload` ENABLE KEYS */;
+
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
